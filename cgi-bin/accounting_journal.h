@@ -12,9 +12,9 @@ namespace accounting {
 		journal();
 		virtual ~journal();
 		void addEntry(entry *entry);
-		const list<entry*> &getEntries() const;
-		void write(ostream & os) override;
-		void read(istream & os) override;
+		list<entry*> &getEntries();
+		void write(ostream & os);
+		void read(istream & os);
 		void analyze_journal(string fileName);
 		void display_journal();
 	private:

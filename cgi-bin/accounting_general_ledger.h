@@ -21,8 +21,8 @@ namespace accounting {
 		const map<string, account> &getAccounts() const;
 		map<string, account> &getAccounts();
 		void postLine(line &l);
-		void write(ostream & os) override;
-		void read(istream & os) override;
+		void write(ostream & os);
+		void read(istream & os);
 		void analyze_ledger(string fileName);
 		void display_ledger();
 	private:

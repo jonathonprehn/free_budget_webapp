@@ -4,9 +4,10 @@
 using namespace accounting;
 using namespace std;
 
-accounting::entry::entry(const date & d) :
-	dat{ d }, lines{ list<line>() }
+accounting::entry::entry(const date & d)
 {
+	lines = list<line>();
+	dat = d;
 }
 
 entry::~entry()

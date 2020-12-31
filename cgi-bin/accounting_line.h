@@ -5,6 +5,7 @@
 #include "accounting_io.h"
 #include "accounting_date.h"
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -17,8 +18,8 @@ namespace accounting {
 		string getAccountName() const { return account;  }
 		line_type getLineType() const { return type;  }
 		double getAmount() const { return amount;  }
-		void write(ostream &os) override;
-		void read(istream &is) override;
+		void write(ostream &os);
+		void read(istream &is);
 		date getAssociated() const;
 		void setAssociated(date &ent);
 	private:

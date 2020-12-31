@@ -59,7 +59,7 @@ void accounting::accounting_book::closeBooks(date &d)
 	//   
 	//Retained earnings will then reflect the net change in value for the since the last closing.
 
-	if (this->l->findAccount("Retained_Earnings") == nullptr) {
+	if (this->l->findAccount("Retained_Earnings") == NULL) {
 		this->l->createAccount("Retained_Earnings", EQUITY);
 	}
 

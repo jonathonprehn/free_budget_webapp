@@ -23,8 +23,8 @@ namespace accounting {
 		//Add line to entry as constructing it
 		void addLineToEntry(line& ln);
 		void addLineToEntry(line&& ln);
-		void write(ostream & os) override;
-		void read(istream & os) override;
+		void write(ostream & os);
+		void read(istream & os);
 		
 	private:
 		date dat;

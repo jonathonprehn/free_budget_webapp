@@ -2,13 +2,15 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <map>
+#include <string>
 
 using namespace accounting;
 using namespace std;
 
-ledger::ledger() : accounts{map<string, account>()}
+ledger::ledger()  
 {
-
+	accounts = map<string, account>();
 }
 
 
@@ -25,13 +27,13 @@ void accounting::ledger::createAccount(string name, account_type type)
 account *accounting::ledger::findAccount(string name)
 {
 	if (accounts.empty())
-		return nullptr;
+		return NULL;
 
 	if (accounts.count(name) == 1) {
 		return &(accounts[name]);
 	}
 	else {
-		return nullptr;
+		return NULL;
 	}
 }
 

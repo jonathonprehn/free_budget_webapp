@@ -24,8 +24,8 @@ namespace accounting {
 		list<line> &getLines();
 		void debit(double amount);
 		void credit(double amount);
-		void write(ostream & os) override;
-		void read(istream & os) override;
+		void write(ostream & os);
+		void read(istream & os);
 		string getName() const;
 		account_type getType() const;
 		double getTotalDebits() const { return debits; }

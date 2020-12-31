@@ -1,9 +1,19 @@
 #include "accounting_account.h"
+#include <list>
+#include <iostream>
 
+using namespace std;
 using namespace accounting;
 
-accounting::account::account(string name, account_type type) :
-	type{type}, name{ name }, debits{0}, credits{0}, amount{0}, lines() {}
+accounting::account::account(string name, account_type type) 
+{
+	lines = list<line>();
+	this->name = name;
+	this->type = type;
+	debits = 0.0;
+	credits = 0.0;
+	amount = 0.0;
+}
 
 accounting::account::account(const account & rhs)
 {

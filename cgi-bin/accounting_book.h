@@ -22,8 +22,8 @@ namespace accounting {
 		void post(entry *ent);
 		journal *getJournal() const;
 		ledger *getGeneralLedger() const;
-		void write(ostream & os) override;
-		void read(istream & os) override;
+		void write(ostream & os);
+		void read(istream & os);
 	private:
 		journal *j;
 		ledger *l;

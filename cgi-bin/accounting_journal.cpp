@@ -4,8 +4,9 @@
 using namespace accounting;
 
 
-journal::journal() : entries{list<entry*>()}
+journal::journal() 
 {
+	this->entries = list<entry*>();
 }
 
 
@@ -19,12 +20,13 @@ void accounting::journal::addEntry(entry * entry)
 	entries.push_back(entry);
 }
 
-const list<entry*> &accounting::journal::getEntries() const { return entries;  }
+list<entry*> &accounting::journal::getEntries() { return entries;  }
+
 
 void accounting::journal::write(ostream & os)
 {
-	os << getEntries().size() << " ";
-	for (list<entry*>::const_iterator itr = getEntries().cbegin(); itr != getEntries().cend(); itr++) {
+	os << this->entries.size() << " ";
+	for (list<entry*>::const_iterator itr = this->entries.cbegin(); itr != getEntries().cend(); itr++) {
 		(*itr)->write(os);
 	}
 }
@@ -40,6 +42,8 @@ void accounting::journal::read(istream & os)
 		addEntry(e);
 	}
 }
+
+
 
 void accounting::journal::analyze_journal(string fileName)
 {
@@ -88,7 +92,7 @@ void accounting::journal::analyze_journal(string fileName)
 void accounting::journal::display_journal()
 {
 	cout << "-------< JOURNAL >-------" << endl;
-	entry *cur = nullptr;
+	entry *cur = NULL;
 	list<entry*>::iterator itr;
 	for (itr = entries.begin(); itr != entries.end(); itr++) {
 		cur = static_cast<entry*>(*itr);
