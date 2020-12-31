@@ -22,8 +22,8 @@
 *.pidb
 *.svclog
 *.scc
-
-
+*.o
+*.exe
 
 # documentation and built objects
 

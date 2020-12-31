@@ -46,4 +46,12 @@ void write_html_footer() {
 }
 
 
+void write_header(char *contentType) {
+	printf("Content-type:%s\n\n", contentType);
+}
+
+void write_header(const char *contentType) {
+	printf("Content-type:%s\n\n", contentType);
+}
+
 #endif

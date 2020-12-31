@@ -4,6 +4,7 @@
 #include "accounting_entry.h"
 #include "accounting_account_type.h"
 #include "accounting_io.h"
+#include "accounting_correlate.h"
 #include <string>
 #include <list>
 

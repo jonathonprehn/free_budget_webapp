@@ -15,4 +15,5 @@ using namespace std;
 list<tuple<string, string>> parse_query_string(char *query);
 void write_html_header();
 void write_html_footer();
-
+void write_header(char *contentType);
+void write_header(const char *contentType);
