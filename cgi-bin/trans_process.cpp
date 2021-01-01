@@ -16,16 +16,23 @@ int main() {
 	// stdin 
 	// cin
 	size_t sz;
-	int ln_ret = getline(&data_buffer, &sz, stdin);
-	data_buffer[sz] = '\0';
-	
+	int ln_ret;
+		
 	write_header("text/html");
 	printf("<!DOCTYPE html>");
 	printf("<html>");
 	printf("<pre>");
-	printf("%s", data_buffer);
+	while((ln_ret = getline(&data_buffer, &sz, stdin)) != -1) 
+	{
+		data_buffer[sz] = '\0';
+		printf("%s", data_buffer);
+	}
+	
 	printf("</pre>");
 	printf("</html>");
 	
+	//parse posted data file
+	//might have to read from stdin repeatedly until everything has been read
+
 	return 0;
 }
