@@ -19,29 +19,19 @@
            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-           <a class="nav-link" href="uploadTransactions.html">Upload Transactions</a>
+           <a class="nav-link" href="#">Link</a>
           </li> 
 	 </ul>
      </div>
 </nav>
 <div class="container">
 	<div class="row">
-	Test CGI: <a href="/cgi-bin/test.sh">link</a>
+	File upload test
 	</div>
-	<div class="row">
-	This will be the home page
-	</div>
-	<div class="row">
-	<div class="col-12">
-		<table class="table">
-		<tr>
-		<th>Overview</th><th></th>
-		</tr>
-		<tr>
-		<td>numbers</td><td>numbers</td>
-		</tr>
-		</table>
-	</div>
+	<form action="/cgi-bin/processTrans.cgi" method="post" enctype="multipart/form-data">
+		<input type="file" name="uploading">
+		<input type="submit" text="Submit">
+	</form>
 	</div>
 </div>
 

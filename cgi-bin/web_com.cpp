@@ -31,13 +31,17 @@ list<tuple<string, string>> parse_query_string(char *query) {
 	return ls;
 }
 
+void write_html_head() {
+	printf("<head>");
+	printf("<meta charset=\"utf-8\">");
+	printf("<head>");
+}
+
 void write_html_header() {
 	printf("Content-type:text/html\n\n");
 	printf("<html>");
-	printf("<head>");
-	
-	printf("</head>");
-	printf("<body>");
+	write_html_head();	
+	printf("<body>");	
 }
 
 void write_html_footer() {
