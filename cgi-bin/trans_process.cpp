@@ -172,11 +172,87 @@ int main() {
 		free(proc_buff);
 		proc_buff = trim_line_endings(data_buffer);
 	
-	
+		//parse headers of csv
+		list<char*> fileHeaders;
+		parser.set_parsing(proc_buff);
+		int commaCount;
+		int proc_buff_len = strlen(proc_buff);
+		for (int i = 0; i < proc_buff_len; i++) {
+			if (proc_buff[i] == ',') {
+				commaCount++;
+			}
+		}
+		int commasParsed = 0;
+		while(!parser.ended(0)) {
+			if (commasParsed <= commaCount)
+			{
+				char *hdr = parser.read_up_to(",");
+				fileHeaders.push_back(hdr);
+				commasParsed++;
+			}
+			else
+			{
+				char *hdr = parser.read_up_to_end();
+				fileHeaders.push_back(hdr);
+				commasParsed++;
+			}
+		}
+		/*
+		printf("Header count: %i\n", fileHeaders.size());
+		for (list<char*>::iterator itr = fileHeaders.begin(); itr != fileHeaders.end(); itr++) {
+			printf("%s\n", *itr);
+		}
+		*/
+
+		//establish input file style and the mappings to the import_data table
+		//how to do this in a good way?
+		
+		//the easiest solution is to setup an import template
+		//this takes some more bookkeeping work but at least
+		//each entry won't have to be individually entered..
+
+		line_count++; 
+		ln_ret = getline(&data_buffer, &sz, stdin);
+		data_buffer[ln_ret] = '\0';
+		free(proc_buff);
+		proc_buff = trim_line_endings(data_buffer);
+		
 		//file content now:
 		int content_line = 0;
 		while (ln_ret != -1 && strcmp(proc_buff, "") != 0) {
-			printf("%i %s\n", content_line, proc_buff);
+			//import data variables
+			char *account_src = NULL; //where the money came from; bank account, credit account, etc
+			char *dst_desc = NULL; //what was purchased, to help categorize it
+			char *amount = NULL; //decimal of the amount spent/transferred
+			                     //this should be positive if its negative
+			char *transDate = NULL; //when this transaction happened
+			list<char*> rowValues;
+			parser.set_parsing(proc_buff);
+			for (int i = 0; i < fileHeaders.size(); i++) {
+				char *hdr_name = fileHeaders[i];
+				char *nextVal = NULL;
+				if (i < fileHeaders.size() - 1) {
+					nextVal = parser.read_up_to(",");
+				} else {
+					nextVal = parser.read_up_to_end();
+				}
+				
+				if (strcmp(hdr_name, "Account Name") == 0) {
+					account_src = nextVal;
+				} else if (strcmp(hdr_name, "Memo") == 0) {
+					dst_desc = nextVal;
+				} else if (strcmp(hdr_name, "Amount") == 0) {
+					amount = nextVal;
+				} else if (strcmp(hdr_name, "Transaction Date") == 0) {
+					transDate = nextVal;
+				} else {
+					free(nextVal); //discard
+				}	
+			}
+
+			
+
+			printf("%s\n", proc_buff);
 			content_line++;
 			line_count++; 
 			ln_ret = getline(&data_buffer, &sz, stdin);	

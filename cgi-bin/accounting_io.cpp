@@ -30,3 +30,5 @@ char *accounting::trim_line_endings(char *str) {
 	//don't discard old one snce the callee might need it
 	return newBuf;
 }
+
+
