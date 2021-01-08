@@ -58,10 +58,49 @@
 		<form id="createAccountForm"  method="POST" action="createAccount.cgi">
 			<label for="accountName">Account Name</label>
 			<input type="text" name="accountName">
-			<label for="">Account Type</label>
-			<!--todo: dropdown-->
-			<label for="">Budget Category</label>
-			<!--todo: dropdown-->
+			<br />
+			<label for="accountType">Account Type</label>
+			<?php
+			$account_type_query = "SELECT "
+								."account_type_id "
+								.",account_type_description "
+								." FROM accounting_account_type"; 
+			$ddl_id = "accountType";
+			$conn = new mysqli("localhost", "free_budget_conn", "badpassword", "free_budget_db");
+			if (mysqli_connect_error()) {
+				die("Failed to connect to db: " . mysqli_connect_error());
+			}
+			try {
+				$sel = $conn->query($account_type_query);
+				echo "<select id=\"" . $ddl_id . "\" name=\"" . $ddl_id . "\">";
+				while ($row = $sel->fetch_assoc()) {
+					echo "<option value=\"" . $row["account_type_id"] . "\">" . $row["account_type_description"] . "</option>";
+				}
+				echo "</select>";
+			} catch(Exception $e) {
+				echo "Error getting categories: " . $e->getMessage();
+			}
+			?>
+			<br />
+			<label for="budgetCategory">Budget Category</label>
+			<?php
+			$budget_category_query = "SELECT "
+								."category_id "
+								.",category "
+								." FROM budget_categories"; 
+			$ddl_id = "budgetCategory";
+			try {
+				$sel = $conn->query($account_type_query);
+				echo "<select id=\"" . $ddl_id . "\" name=\"" . $ddl_id . "\">";
+				while ($row = $sel->fetch_assoc()) {
+					echo "<option value=\"" . $row["category_id"] . "\">" . $row["category"] . "</option>";
+				}
+				echo "</select>";
+			} catch(Exception $e) {
+				echo "Error getting categories: " . $e->getMessage();
+			}
+			?>
+			<br />
 			<label for="accountDesc">Account Description</label>
 			<textarea  name="accountDesc" rows="2" cols="50"></textarea>
 			
@@ -89,7 +128,7 @@
 		</tr>	
 		<?php
 		$account_query = ""; //TODO
-
+		
 		?>
 		</table>
 		</div>

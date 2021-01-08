@@ -142,6 +142,10 @@ int rd_parser::get_ptr_val() {
 	return this->ptr;
 }
 
+char rd_parser::get_cur_char() {
+	return this->parsing[this->ptr];
+}
+
 void rd_parser::consume_whitespace() {
 	while(!ended(0) && isspace(this->parsing[this->ptr])) {
 		this->ptr++;

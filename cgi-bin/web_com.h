@@ -18,3 +18,6 @@ void write_html_footer();
 void write_html_head();
 void write_header(char *contentType);
 void write_header(const char *contentType);
+char *decode_form_url_encoding(char *s);
+bool is_reserved_uri(char c);
+

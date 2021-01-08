@@ -26,7 +26,12 @@ trans_process.o: trans_process.cpp
 	g++ -c -std=c++0x -o trans_process.o trans_process.cpp -I.
 web_err.o: web_err.cpp
 	g++ -c -std=c++0x -o web_err.o web_err.cpp -I.
+create_category.o: create_category.cpp
+	g++ -c -std=c++0x -o create_category.o -I/usr/include/mysql -I/usr/include/mariadb create_category.cpp -I. -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 processTrans.cgi: trans_process.o web_com.o accounting_line.o accounting_correlate.o accounting_date.o accounting_account_type.o accounting_book.o accounting_account.o accounting_general_ledger.o accounting_journal.o accounting_entry.o accounting_io.o rd_parser.o web_err.o
-	g++ -o processTrans.cgi -I. $(mysql_config --cflags) accounting_io.o web_com.o accounting_line.o accounting_correlate.o accounting_date.o accounting_account_type.o accounting_book.o accounting_account.o accounting_general_ledger.o accounting_journal.o accounting_entry.o rd_parser.o trans_process.o web_err.o $(mysql_config --lib)
-	chmod 755 processTrans.cgi
+	g++ -o processTrans.cgi -I. -I/usr/include/mysql -I/usr/include/mariadb accounting_io.o web_com.o accounting_line.o accounting_correlate.o accounting_date.o accounting_account_type.o accounting_book.o accounting_account.o accounting_general_ledger.o accounting_journal.o accounting_entry.o rd_parser.o trans_process.o web_err.o  -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
+	chmod 755 processTrans.cgi 
+createCategory.cgi: create_category.o accounting_io.o rd_parser.o web_err.o web_com.o
+	g++ -o createCategory.cgi -I. -I/usr/include/mysql -I/usr/include/mariadb accounting_io.o web_com.o rd_parser.o create_category.o web_err.o -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
+	chmod 755 createCategory.cgi
 

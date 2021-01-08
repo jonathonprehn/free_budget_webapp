@@ -228,8 +228,11 @@ int main() {
 			char *transDate = NULL; //when this transaction happened
 			list<char*> rowValues;
 			parser.set_parsing(proc_buff);
-			for (int i = 0; i < fileHeaders.size(); i++) {
-				char *hdr_name = fileHeaders[i];
+			int i = 0;
+			//for (int i = 0; i < fileHeaders.size(); i++) {
+			for (list<char*>::iterator itr = fileHeaders.begin(); itr != fileHeaders.end(); itr++) 
+			{
+				char *hdr_name = *itr;
 				char *nextVal = NULL;
 				if (i < fileHeaders.size() - 1) {
 					nextVal = parser.read_up_to(",");
@@ -248,6 +251,7 @@ int main() {
 				} else {
 					free(nextVal); //discard
 				}	
+				i++;
 			}
 
 			

@@ -19,6 +19,7 @@ namespace accounting {
 		char *read_up_to_end();
 		bool ended(int offset);
 		int get_ptr_val();
+		char get_cur_char();
 		void inc_ptr();
 		void consume_whitespace(); //skip whitespace
 		void print_state();
