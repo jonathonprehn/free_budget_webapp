@@ -62,7 +62,7 @@
 			<label for="categoryDesc">Category Description</label>
 			<input id="categoryDescInput" type="text" name="categoryDesc">
 			<br />
-			<input type="submit" text="Submit">
+			<input class="btn btn-info" type="submit" value="Submit">
 		</form>
 		</div>
 	</div>
@@ -86,18 +86,25 @@ $( document ).ready(function() {
 			evt.preventDefault();
 			var form = $(this);
 			var act = form.attr("action");
-			
-			console.log("making POST to " + act);
+			var formData = form.serialize();
+				
+			//console.log("making POST to " + act);
+			//console.log("Form data: " + formData);
 			$.ajax({
 			method: "POST",
 			url: act,
-			data: form.serialize(),
+			data: formData,
 			success: 
 			function(responseData) {
 				console.log("successful");
+				console.log(responseData);
 				//reload page
 				$("#categoryListShow").empty();
 				$("#categoryListShow").load("categoryList.php");
+			},
+			function(responseData) {
+				console.log("failed");
+				console.log(responseData);
 			}
 			});
 		});
@@ -107,6 +114,31 @@ $( document ).ready(function() {
 	$("#categoryListShow").empty();
 	$("#categoryListShow").load("categoryList.php");
 });
+
+function deleteCategory(cat) {
+	var act = "/cgi-bin/deleteCategory.cgi";
+	//console.log("Deleting '" + cat + "'");	
+	//console.log("making POST to " + act);
+	$.ajax({
+	method: "POST",
+	url: act,
+	data: cat,
+	success: 
+	function(responseData) {
+		console.log("successful");
+		console.log(responseData);
+		//reload page
+		$("#categoryListShow").empty();
+		$("#categoryListShow").load("categoryList.php");
+	},
+	error:
+	function(responseData) {
+		console.log("failed");
+		console.log(responseData);
+	}
+	});
+}
+
 </script>
 </body>
 </html>

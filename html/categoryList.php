@@ -6,6 +6,7 @@
 		<tr>
 			<th>Category Name</th>
 			<th>Description</th>
+			<td></th>
 		</tr>
 		<?php
 		$cat_query = "SELECT ".
@@ -24,6 +25,7 @@
 				echo "<tr>";
 				echo "<td>".$c0."</td>";
 				echo "<td>".$c1."</td>";
+				echo "<td><button class=\"btn btn-info\" type=\"button\" onclick=\"deleteCategory('".$c0."');\">Delete</button></td>";
 				echo "</tr>";
 			}
 		} catch(Exception $e) {
@@ -31,6 +33,7 @@
 		}
 		?>
 		</table>
+		
 	</div>
 </div>
 

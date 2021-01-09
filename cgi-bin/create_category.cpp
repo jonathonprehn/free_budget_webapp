@@ -35,14 +35,14 @@ int main() {
 			
 		ln_ret = getline(&data_buffer, &sz, stdin);
 		data_buffer[ln_ret] = '\0';
-		proc_buff = trim_line_endings(data_buffer);	
-		char *decoded = decode_form_url_encoding(proc_buff);		
+		proc_buff = trim_line_endings(data_buffer);			
 		char *categoryName = NULL;
 		char *categoryDesc = NULL;
-		int parsedCount = 0;
+		int parsedCount = 0;	
+
 		//parse categoryName and categoryDesc
 		rd_parser parser;
-		parser.set_parsing(decoded);
+		parser.set_parsing(proc_buff);
 		while (!parser.ended(0)) {
 			if (parser.check_match("categoryName")) {
 				parser.match("categoryName");
@@ -70,53 +70,69 @@ int main() {
 			}
 		}
 
-		//insert into the database at this point
-		MYSQL *conn = NULL;
-		MYSQL_RES *res = NULL;
-		MYSQL_ROW row;
+		if (categoryName != NULL && strcmp(categoryName, "") != 0) {
 
-		const char *server = "localhost";
-		const char *user = "free_budget_conn";
-		const char *pwd = "badpassword";
-		const char *db = "free_budget_db";
-		conn = mysql_init(NULL);
-		string query = "";
-		if (!mysql_real_connect(conn, server, user, pwd, db, 0, NULL, 0)) {
-			fprintf(stderr, "Unable to connect to database due to error:");
-			fprintf(stderr, "%s", mysql_error(conn)); //very insecure!!!	
-		}
-		else {
-			query.append("INSERT INTO budget_categories (category, description) VALUES (\'");
-			query.append(categoryName);
-			query.append("\', \'");	
-			query.append(categoryDesc);
-			query.append("\');");
-			if (mysql_query(conn, query.c_str())) {
-				fprintf(stderr, "%s", mysql_error(conn));
-			}
-			else
-			{
-				//successfully executed the query
-			}
-			mysql_close(conn);
-		}
+			//insert into the database at this point
+			MYSQL *conn = NULL;
+			MYSQL_RES *res = NULL;
+			MYSQL_ROW row;
 
-		//redirect back to category page
-			
+			const char *server = "localhost";
+			const char *user = "free_budget_conn";
+			const char *pwd = "badpassword";
+			const char *db = "free_budget_db";
+			conn = mysql_init(NULL);
+			string query = "";
+			if (!mysql_real_connect(conn, server, user, pwd, db, 0, NULL, 0)) {
+				fprintf(stderr, "Unable to connect to database due to error:");
+				fprintf(stderr, "%s", mysql_error(conn)); //very insecure!!!	
+			}
+			else {	
+				char *decodedCategoryName = decode_form_url_encoding(categoryName);
+				char *decodedCategoryDesc = decode_form_url_encoding(categoryDesc);
+				
+				/*
+				printf("Content-Type:application/json");
+				printf("\n\n");
+				printf("{  \"decoded_name\": \"%s\", \"decoded_desc\": \"%s\" }", decodedCategoryName, decodedCategoryDesc);
+				return 0;
+				*/		
+				
+				query.append("INSERT INTO budget_categories (category, description) VALUES (\'");
+				query.append(decodedCategoryName);
+				query.append("\', \'");	
+				query.append(decodedCategoryDesc);
+				query.append("\');");
+				if (mysql_query(conn, query.c_str())) {
+					fprintf(stderr, "%s", mysql_error(conn));
+				}
+				else
+				{
+					//successfully executed the query
+				}
+				mysql_close(conn);
+				free(decodedCategoryName);
+				free(decodedCategoryDesc);
+			}
+
+			//redirect back to category page
+				
+			printf("Content-Type:application/json");
+			printf("\n\n");
+			printf("{ \"input\": \"%s\", \"name\": \"%s\", \"desc\": \"%s\", \"sql_query\":\"%s\" }", proc_buff, categoryName, categoryDesc, query.c_str());	
+		} else {
+			printf("Content-Type:application/json");
+			printf("\n\n");
+			printf("{ \"input\": \"%s\", \"name\": \"\", \"desc\": \"\", \"sql_query\":\"\" }", proc_buff);
+		}
+	
+	} catch(exception &_e_) {
+		//printf("Error from POST:\n");
+		//printf("%s\n", _e_.what());
+		//web_error(_e_.what());
 		printf("Content-Type:application/json");
 		printf("\n\n");
-		printf("{ \"input\": \"%s\", \"decoded\": \"%s\", \"name\": \"%s\", \"desc\": \"%s\", \"sql_query\":\"%s\" }", proc_buff, decoded, categoryName, categoryDesc, query.c_str());
-		
-		free(decoded);
-		free(proc_buff);		
-		free(data_buffer);
-	
-		//parse posted data file
-		//might have to read from stdin repeatedly until everything has been read
-	} catch(exception &_e_) {
-		printf("Error from POST:\n");
-		printf("%s\n", _e_.what());
-		//web_error(_e_.what());		
+		printf("{  \"error\": \"%s\" }",  _e_.what());
 	}
 	return 0;
 }
