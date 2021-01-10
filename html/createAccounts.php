@@ -13,7 +13,7 @@
 		<div class="col-12">
 		<!-- make account form -->
 		
-		<form id="createAccountForm"  method="POST" action="createAccount.cgi">
+		<form id="createAccountForm"  method="POST" action="/cgi-bin/createAccount.cgi">
 			<label for="accountName">Account Name</label>
 			<input type="text" name="accountName">
 			<br />
@@ -48,7 +48,7 @@
 								." FROM budget_categories"; 
 			$ddl_id = "budgetCategory";
 			try {
-				$sel = $conn->query($account_type_query);
+				$sel = $conn->query($budget_category_query);
 				echo "<select id=\"" . $ddl_id . "\" name=\"" . $ddl_id . "\">";
 				while ($row = $sel->fetch_assoc()) {
 					echo "<option value=\"" . $row["category_id"] . "\">" . $row["category"] . "</option>";
@@ -63,7 +63,7 @@
 			<textarea  name="accountDesc" rows="2" cols="50"></textarea>
 			
 			<br />
-			<input type="submit" text="Submit">
+			<input type="submit" value="Create Account">
 		</form>
 		</div>
 	</div>
@@ -74,6 +74,7 @@
 		<div class="col-12">
 		<h5>Existing accounts</h5>
 		<!-- list existing accounts -->
+		<div id="">
 		<table class="table">
 		<tr>
 		<th>Account Name</th>
@@ -89,6 +90,7 @@
 		
 		?>
 		</table>
+		</div>
 		</div>
 	</div>
 </div>

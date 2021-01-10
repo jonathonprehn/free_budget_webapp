@@ -1,4 +1,4 @@
-
+<!-- This page is loaded into manageCategories.php using jQuery's load() function -->
 <div class="row">
 	<div class="col-12">
 		<h5>Existing categories</h5>
