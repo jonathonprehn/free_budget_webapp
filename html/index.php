@@ -7,50 +7,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
 <body>
-<!--
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Budget</a>
-     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> 
-        <span class="navbar-toggler-icon"></span>
-     </button>
-     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-         <ul class="navbar-nav mr-auto"> 
-	  <li class="nav-item active">
-           <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-           <a class="nav-link" href="uploadTransactions.html">Upload Transactions</a>
-          </li> 
-	 </ul>
-     </div>
-</nav>
--->
-<div class="container">
-	<div class="row">
-		<div class="col-2">
-			<a href="uploadTransactions.html">Upload</a>	
-		</div>
-		<div class="col-2">
-			Create:<br />
-			<ul>
-			<li><a href="createAccounts.php">Accounts</a></li>
-			<li><a href="manageCategories.php">Categories</a></li>
-			</ul>	
-		</div>
-		<div class="col-2">
-			
-		</div>
-		<div class="col-2">
 
-		</div>
-		<div class="col-2">
-			
-		</div>
-		<div class="col-2">
-
-		</div>
-	</div>
-</div>
 <div class="container">
 	<div class="row">
 	Test CGI: <a href="/cgi-bin/test.sh">link</a>
