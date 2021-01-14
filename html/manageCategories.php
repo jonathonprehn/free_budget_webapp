@@ -63,6 +63,7 @@ $( document ).ready(function() {
 				$("#categoryListShow").empty();
 				$("#categoryListShow").load("categoryList.php");
 			},
+			error:
 			function(responseData) {
 				console.log("failed");
 				console.log(responseData);
