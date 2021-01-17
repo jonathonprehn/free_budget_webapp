@@ -8,6 +8,8 @@
 #include <string.h>
 #include <tuple>
 #include <exception>
+#include <ctime>
+#include <mysql.h>
 
 #include "accounting_io.h"
 #include "rd_parser.h"
@@ -17,6 +19,11 @@ using namespace std;
 using namespace accounting;
 
 int main() {
+	printf("Content-Type:text/html");
+	printf("\n\n");
+	printf("<html>");
+	printf("</head><meta charset=\"UTF-8\"></head>");
+	printf("<body><pre>");
 	try {
 
 		//char *GET_query = getenv("QUERY_STRING"); //this is how to get the URL query string
@@ -25,14 +32,7 @@ int main() {
 		// stdin 
 		// cin
 		size_t sz;
-		int ln_ret;
-		
-		write_header("text/html");
-		printf("<!DOCTYPE html>");
-		printf("<html>");
-		write_html_head();
-		printf("<body>");
-		printf("<pre>");
+		int ln_ret;	
 
 		// expecting one "part"
 		// https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST
@@ -51,25 +51,13 @@ int main() {
 		data_buffer[ln_ret] = '\0';
 		free(proc_buff);
 		proc_buff = trim_line_endings(data_buffer);
-
-		/*
-		while (ln_ret != -1) {
-			printf("%s\n",  proc_buff);
-			line_count++; 
-			ln_ret = getline(&data_buffer, &sz, stdin);	
-			data_buffer[ln_ret] = '\0';
-			free(proc_buff);
-			proc_buff = trim_line_endings(data_buffer);
 	
-		}
-		return 0;
-		*/
 		rd_parser parser;
 		char *formName = NULL;
 		char *fileName = NULL;
 		char *content_type = NULL;
-	
-		//printf("Starting to parse header\n");
+		
+
 		while (ln_ret != -1 && (fileName == NULL || content_type == NULL || formName == NULL)) {	
 			
 			//parse header 
@@ -80,7 +68,7 @@ int main() {
 			//printf("Parsing...\n");
 			//parser.print_state();
 			char *hdr_name = parser.read_up_to(":");
-			//printf("Header: \"%s\"\n", hdr_name);
+			//printf("Header %s\n", hdr_name);
 			//parser.print_state();
 
 			if (strcmp(hdr_name, "Content-Disposition") == 0) {	
@@ -102,7 +90,7 @@ int main() {
 							fileName = parser.read_up_to("\"");	
 						}
 						else {
-							printf("unknown content disposition variable name %s\n", varName);
+							//printf("unknown content disposition variable name %s\n", varName);
 	
 						}
 						free(varName);
@@ -115,7 +103,7 @@ int main() {
 					}
 				}
 				else {
-					printf("form-data; isn't matching\n");
+					//printf("form-data; isn't matching\n");
 				}
 			}
 			else if (strcmp(hdr_name, "Content-Type") == 0 || strcmp(hdr_name, "Content-type") == 0) {
@@ -124,7 +112,7 @@ int main() {
 
 			}
 			else {
-				printf("Unrecognized form content header: %s\n", hdr_name);
+				//printf("Unrecognized form content header: %s\n", hdr_name);
 			}
 		
 			//printf("free hdr_name\n");
@@ -135,17 +123,11 @@ int main() {
 			//printf("consume_whitespace\n");
 			parser.consume_whitespace();
 			
-			//printf("next getline\n");
 			ln_ret = getline(&data_buffer, &sz, stdin);
-			//printf("null terminate getline\n");
 			data_buffer[ln_ret] = '\0';
-			//printf("free prev. proc_buff\n");
 			free(proc_buff);
-			//printf("call to trim_line_endings\n");
 			proc_buff = trim_line_endings(data_buffer);
-			//printf("inc line_count\n");
 			line_count++; 
-			//printf("\"%s\"\n",proc_buff);
 		}
 
 	
@@ -160,12 +142,12 @@ int main() {
 			printf("Cannot get content type from POST\n");
 		}
 
+		
 		printf("Done parsing headers\n");
 		printf("form variable name for file = %s\n", formName);
 		printf("uploaded file name = %s\n", fileName);
 		printf("content type is \"%s\"\n", content_type);
-
-
+		
 		line_count++; 
 		ln_ret = getline(&data_buffer, &sz, stdin);
 		data_buffer[ln_ret] = '\0';
@@ -217,6 +199,90 @@ int main() {
 		free(proc_buff);
 		proc_buff = trim_line_endings(data_buffer);
 		
+		MYSQL *conn = NULL;
+		const char *server = "localhost";
+		const char *user = "free_budget_conn";
+		const char *pwd = "badpassword";
+		const char *db = "free_budget_db";
+
+		//printf("</pre></body></html>");
+		//return 0;
+
+		conn = mysql_init(NULL);
+		if (!mysql_real_connect(conn, server, user, pwd, db, 0, NULL, 0)) {
+			//fprintf(stderr, "error: %s\n", mysql_error(conn)); //very insecure!!!	
+			printf("error: %s\n", mysql_error(conn));
+			printf("</pre></body></html>");
+			return 0;
+		}	
+
+
+		string countUploadedFileId = "SELECT COUNT(*) FROM uploaded_files WHERE upload_file_name = \'";
+		countUploadedFileId.append(fileName);
+		countUploadedFileId.append("\';");
+
+		if (mysql_query(conn, countUploadedFileId.c_str())) {
+			fprintf(stderr, "error:\n%s\n", mysql_error(conn));
+			printf("</pre></body></html>");
+			return 0;
+		}
+
+		int uploadedFileCount = 0;
+		MYSQL_RES *count_result = mysql_store_result(conn);
+		MYSQL_ROW count_row;
+		while ((count_row = mysql_fetch_row(count_result))) {
+			uploadedFileCount = atoi(count_row[0]);
+		}
+		mysql_free_result(count_result);
+
+		/*Block double import of files*/
+		if (uploadedFileCount > 0) {
+			printf("The file was not able to be uploaded");
+			printf("</pre>");
+			printf("<br />");
+			printf("<p>");
+			printf("There is already an uploaded file called %s", fileName);
+			printf("<br />");
+			printf("<a href=\"/free_budget_webapp/html/uploadTransactions.php\">Back to import transactions page</a>");
+			printf("</p>");
+			printf("</body></html>");
+			return 0;
+		}
+
+
+		//variable "fileName" has the uploaded file's name
+		char *todaysDate = static_cast<char*>(malloc(sizeof(char)*50));
+		time_t t = time(0);
+		strftime(todaysDate, 50, "%Y-%m-%d", localtime(&t));
+		string fileInsertQuery = "INSERT INTO uploaded_files (upload_file_name, upload_date) VALUES (\'";
+		fileInsertQuery.append(fileName);
+		fileInsertQuery.append("\', DATE(\'");
+		fileInsertQuery.append(todaysDate);
+		fileInsertQuery.append("\'));");
+
+		if (mysql_query(conn, fileInsertQuery.c_str())) {
+			fprintf(stderr, "{ \"error\": \"%s\" }", mysql_error(conn));
+			return 0;
+		}
+	
+		string getUploadedFileId = "SELECT upload_id FROM uploaded_files WHERE upload_file_name = \'";
+		getUploadedFileId.append(fileName);
+		getUploadedFileId.append("\' AND upload_date = DATE(\'");
+		getUploadedFileId.append(todaysDate);
+		getUploadedFileId.append("\');");
+		if (mysql_query(conn, getUploadedFileId.c_str())) {
+			fprintf(stderr, "error:\n%s\n", mysql_error(conn));
+			return 0;
+		}
+
+		char *upload_id = NULL;
+		MYSQL_RES *uploaded_result = mysql_store_result(conn);
+		MYSQL_ROW uploaded_row;
+		while ((uploaded_row = mysql_fetch_row(uploaded_result))) {
+			upload_id = strdup(uploaded_row[0]);
+		}
+		mysql_free_result(uploaded_result);
+		
 		//file content now:
 		int content_line = 0;
 		while (ln_ret != -1 && strcmp(proc_buff, "") != 0) {
@@ -226,7 +292,7 @@ int main() {
 			char *amount = NULL; //decimal of the amount spent/transferred
 			                     //this should be positive if its negative
 			char *transDate = NULL; //when this transaction happened
-			list<char*> rowValues;
+			
 			parser.set_parsing(proc_buff);
 			int i = 0;
 			//for (int i = 0; i < fileHeaders.size(); i++) {
@@ -254,17 +320,39 @@ int main() {
 				i++;
 			}
 
+			string query = "INSERT INTO imported_data (upload_id, transaction_date, src_bank_account, description, amount, correlated_flag) VALUES (";
+		        query.append(upload_id);
+			query.append(", STR_TO_DATE(\'");
+			query.append(transDate);
+			query.append("\', \'%m/%d/%Y\'), \'");
+			query.append(account_src);
+			query.append("\', \'");
+			query.append(dst_desc);
+			query.append("\', ");
+			query.append(amount);
+			query.append(", 0);");
 			
-
+			/*
+			printf("line:\n");
 			printf("%s\n", proc_buff);
+			printf("query:\n");
+			printf("%s\n", query.c_str());
+			*/
+
+			if (mysql_query(conn, query.c_str())) {
+				fprintf(stderr, "{ \"error\": \"%s\" }", mysql_error(conn));
+				return 0;
+			}	
+
+			//printf("%s\n", proc_buff);
 			content_line++;
 			line_count++; 
 			ln_ret = getline(&data_buffer, &sz, stdin);	
 			data_buffer[ln_ret] = '\0';
 			free(proc_buff);
 			proc_buff = trim_line_endings(data_buffer);
-	
-		}	
+		}
+		printf("Uploaded %i rows\n", content_line);
 	
 		if (form_block_delimiter != NULL)
 		{
@@ -272,18 +360,24 @@ int main() {
 		}
 	
 		free(data_buffer);
-		
-		printf("</pre>");
-		printf("</body>");
-		printf("</html>");	
-		printf("\n");
-	
+		free(todaysDate);
+		mysql_close(conn);
+
+		printf("successfully uploaded file %s\n ", fileName);	
+	 	printf("</pre>");
+		printf("<br />");
+		printf("<p>");
+		printf("<a href=\"/free_budget_webapp/html/uploadTransactions.php\">Back to import transactions page</a>");
+		printf("</p>");	
+
 		//parse posted data file
 		//might have to read from stdin repeatedly until everything has been read
 	} catch(exception &_e_) {
-		printf("Error from POST:\n");
-		printf("%s\n", _e_.what());
+		//printf("Error from POST:\n");
+		printf("error:\n%s\n", _e_.what());
 		//web_error(_e_.what());		
-	}
+		printf("</pre></body></html>");
+	}	
+
 	return 0;
 }

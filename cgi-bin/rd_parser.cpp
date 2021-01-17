@@ -17,14 +17,14 @@ rd_parser::rd_parser() {
 
 rd_parser::~rd_parser() {
 	if (this->parsing != NULL) {
-		free(parsing);
+		free(this->parsing);
 		this->parsing = NULL;
 	}
 }
 
 void rd_parser::set_parsing(char *s) {
 	if (this->parsing != NULL) {
-		free(parsing);
+		free(this->parsing);
 		this->parsing = NULL;
 	}
 	this->parsing = strdup(s);
@@ -71,8 +71,9 @@ void rd_parser::match(char *s) {
 	if (check_match(s)) 
 	{
 		int i = 0;
-		while(this->parsing[this->ptr] == s[i++])
+		while(this->parsing[this->ptr] == s[i])
 	       	{
+			i++;
 			inc_ptr();
 		}	
 	}
@@ -90,7 +91,7 @@ void rd_parser::match(const char *s) {
 }
 
 char *rd_parser::read_up_to(char *delim) {
-	char *buffer = static_cast<char*>(malloc(sizeof(char)*strlen(parsing) - ptr + 1));
+	char *buffer = static_cast<char*>(malloc(sizeof(char)*(strlen(this->parsing) - this->ptr + 1)));
 	//buffer to be resized after reading
 	int buf_offset = 0;
 	while(!check_match(delim) && !ended(0)) 
@@ -122,7 +123,7 @@ char *rd_parser::read_up_to(const char *delim) {
 char *rd_parser::read_up_to_end() {
 	int parsing_len = strlen(this->parsing);
 	int offset = this->ptr;
-	int bufferSize = parsing_len-offset+2;
+	int bufferSize = parsing_len-offset+1;
 	char *buffer = static_cast<char*>(malloc(sizeof(char)*bufferSize));
 	while (this->ptr < parsing_len) 
 	{
@@ -148,11 +149,19 @@ char rd_parser::get_cur_char() {
 
 void rd_parser::consume_whitespace() {
 	while(!ended(0) && isspace(this->parsing[this->ptr])) {
-		this->ptr++;
+		this->inc_ptr();
 	}
 }
 
-void rd_parser::inc_ptr() { this->ptr++; }
+void rd_parser::inc_ptr() { 
+	int parse_length = strlen(this->parsing);
+	if (this->ptr + 1 <= parse_length) {
+		this->ptr++;
+	}
+	else {
+		fprintf(stderr, "Cannot increment pointer beyond parsing string's length\n");
+	}
+}
 
 void rd_parser::print_state() {
 	int cur_ptr = this->ptr;

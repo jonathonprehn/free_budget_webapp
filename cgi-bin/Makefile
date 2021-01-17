@@ -23,7 +23,7 @@ web_com.o: web_com.cpp
 rd_parser.o: rd_parser.cpp
 	g++ -g -c -std=c++0x -o rd_parser.o rd_parser.cpp -I.
 trans_process.o: trans_process.cpp
-	g++ -g -c -std=c++0x -o trans_process.o trans_process.cpp -I.
+	g++ -g -c -std=c++0x -o trans_process.o trans_process.cpp  -I/usr/include/mysql -I/usr/include/mariadb -I.  -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 web_err.o: web_err.cpp
 	g++ -g -c -std=c++0x -o web_err.o web_err.cpp -I.
 create_category.o: create_category.cpp
@@ -44,4 +44,5 @@ deleteCategory.cgi: delete_category.o accounting_io.o rd_parser.o web_err.o web_
 createAccount.cgi: create_accounting_account.o accounting_io.o rd_parser.o web_err.o web_com.o
 	g++ -g -o createAccount.cgi -I. -I/usr/include/mysql -I/usr/include/mariadb accounting_io.o web_com.o rd_parser.o create_accounting_account.o web_err.o -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 	chmod 755 createAccount.cgi
-
+testFunction: testFunction.cpp accounting_io.o rd_parser.o web_err.o web_com.o
+	g++ -g -o testFunction -I. testFunction.cpp accounting_io.o web_com.o rd_parser.o web_err.o 

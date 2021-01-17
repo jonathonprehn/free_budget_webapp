@@ -96,7 +96,7 @@ $( document ).ready(function() {
 			var frm = $("#createAccountForm");
 			var act = frm.attr('action');
 			var formData = frm.serialize();
-				
+			console.log(formData);	
 			$.ajax({
 			method: "POST",
 			url: act,

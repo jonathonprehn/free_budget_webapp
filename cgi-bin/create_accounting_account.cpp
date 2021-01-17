@@ -110,6 +110,13 @@ int main() {
 			}
 		}
 
+		/*
+		printf("Content-Type:application/json");
+		printf("\n\n");
+		printf("{ \"accountName\": \"%s\", \"accountDesc\": \"%s\", \"accountType\": \"%s\" }", accountName, accountDesc, accountType);
+		return 0;
+		*/
+
 		if (accountName != NULL && strcmp(accountName, "") != 0) {
 
 			//insert into the database at this point
@@ -127,19 +134,21 @@ int main() {
 				fprintf(stderr, "Unable to connect to database due to error:");
 				fprintf(stderr, "%s", mysql_error(conn)); //very insecure!!!	
 			}
-			else {	
+			else {					
+				
 				char *decodedAccountName = decode_form_url_encoding(accountName);
+				//char *decodedAccountName = "";
 				char *decodedAccountDesc = decode_form_url_encoding(accountDesc);
+				//char *decodedAccountDesc = "";
 				
-				//account type and budget category are id values
+				//printf("Content-Type:application/json");
+				//printf("\n\n");
+				//printf("{  \"name\": \"%s\", \"desc\": \"%s\" }", accountName, accountDesc );
+				//return 0;
+				
 
-				/*
-				printf("Content-Type:application/json");
-				printf("\n\n");
-				printf("{  \"decoded_name\": \"%s\", \"decoded_desc\": \"%s\" }", decodedCategoryName, decodedCategoryDesc);
-				return 0;
-				*/		
-				
+				//account type and budget category are id values	
+
 				query.append("INSERT INTO accounting_accounts (account_name, description, rel_account_type_id, rel_category_id, rel_accounting_book_id) VALUES (\'");
 				query.append(decodedAccountName);
 				query.append("\', \'");	

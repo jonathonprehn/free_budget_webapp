@@ -69,7 +69,7 @@ char *decode_form_url_encoding(char *s) {
 			percentagesCount++;
 		}
 	}
-	int outputLength = s_len + 1 - (percentagesCount*2); // reducing character count
+	int outputLength = s_len - (percentagesCount*2); // reducing character count
 	char *decoded = static_cast<char*>(malloc(sizeof(char) * outputLength));
 	
 	//printf("input: %s\n", s);

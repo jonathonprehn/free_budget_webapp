@@ -13,9 +13,9 @@ function gen_nav_bar() {
  .         'Data entry'
  .       '</a>'
  .       '<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">'
- .         '<a class="dropdown-item" href="#">Manual entry</a>'
+ .         '<a class="dropdown-item" href="enterAccountingEntry.php">Manual entry</a>'
  .         '<a class="dropdown-item" href="uploadTransactions.php">Import transactions</a>'
- .         '<a class="dropdown-item" href="">Resolve correlations</a>' /*TODO: number of correlations to resolve*/
+ .         '<a class="dropdown-item" href="resolveCorrelations.php">Resolve correlations</a>' /*TODO: number of correlations to resolve*/
  .       '</div>'
  .     '</li>'
  .     '<li class="nav-item dropdown">'
