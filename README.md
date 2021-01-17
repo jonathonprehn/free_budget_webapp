@@ -1,6 +1,6 @@
 # free_budget_webapp
 
-The goal of this project is to have a simple to use personal finance web application for usage by a household.
+The goal of this project is to have a simple to use personal finance web application for a household.
 
 My hope is that it will be similar to something like GNUCash, only usable by multiple members (example: roommates, a family).
 
