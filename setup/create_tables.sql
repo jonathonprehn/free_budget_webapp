@@ -98,13 +98,12 @@ FOREIGN KEY (rel_book_id)
 --follow double entry accounting in that 
 --total credits must = total debits for an entry to 
 --be valid 
-CREATE TABLE accounting_lines (
-	line_id INT AUTO_INCREMENT PRIMARY KEY,
-	rel_accounting_entry_id INT NOT NULL,
-	rel_account_id INT NOT NULL,
-	rel_line_type_id INT NOT NULL,
-	memo VARCHAR(250) NULL,
-	amount DECIMAL(15,2) NOT NULL
+CREATE TABLE correlations_table (
+	correlation_id INT AUTO_INCREMENT PRIMARY KEY,
+	src_description VARCHAR(500) NOT NULL,
+	dst_account_name VARCHAR(150) NOT NULL,
+	dst_rel_account_id INT NOT NULL,
+	rel_line_type_id INT NOT NULL
 );
 
 ALTER TABLE accounting_lines ADD
@@ -122,7 +121,14 @@ FOREIGN KEY (rel_line_type_id)
 		
 
 --correlation table (links uploads to accounting)
-
+CREATE TABLE accounting_lines (
+	line_id INT AUTO_INCREMENT PRIMARY KEY,
+	rel_accounting_entry_id INT NOT NULL,
+	rel_account_id INT NOT NULL,
+	rel_line_type_id INT NOT NULL,
+	memo VARCHAR(250) NULL,
+	amount DECIMAL(15,2) NOT NULL
+);
 
 
 --budget info (links accounting to budget part)
