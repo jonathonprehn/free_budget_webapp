@@ -1,3 +1,6 @@
+clean:
+	find . -name "*.o" -type f -delete
+	find . -name "*.cgi" -type f -delete
 accounting_entry.o: accounting_entry.cpp
 	g++ -g -c -std=c++0x -o accounting_entry.o accounting_entry.cpp -I.
 accounting_io.o: accounting_io.cpp
@@ -28,6 +31,8 @@ web_err.o: web_err.cpp
 	g++ -g -c -std=c++0x -o web_err.o web_err.cpp -I.
 create_category.o: create_category.cpp
 	g++ -g -c -std=c++0x -o create_category.o -I/usr/include/mysql -I/usr/include/mariadb create_category.cpp -I. -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
+manual_accounting_entry.o: manual_accounting_entry.cpp
+	g++ -g -c -std=c++0x -o manual_accounting_entry.o -I/usr/include/mysql -I/usr/include/mariadb manual_accounting_entry.cpp -I. -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 delete_category.o: delete_category.cpp
 	g++ -g -c -std=c++0x -o delete_category.o -I/usr/include/mysql -I/usr/include/mariadb delete_category.cpp -I. -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 create_accounting_account.o: create_accounting_account.cpp
@@ -46,3 +51,7 @@ createAccount.cgi: create_accounting_account.o accounting_io.o rd_parser.o web_e
 	chmod 755 createAccount.cgi
 testFunction: testFunction.cpp accounting_io.o rd_parser.o web_err.o web_com.o
 	g++ -g -o testFunction -I. testFunction.cpp accounting_io.o web_com.o rd_parser.o web_err.o 
+manualAccountingEntry.cgi: manual_accounting_entry.o accounting_io.o accounting_entry.o accounting_line.o rd_parser.o web_err.o web_com.o
+	g++ -g -o manualAccountingEntry.cgi -I. -I/usr/include/mysql -I/usr/include/mariadb accounting_io.o accounting_entry.o accounting_line.o web_com.o rd_parser.o accounting_date.o manual_accounting_entry.o web_err.o -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
+	chmod 755 manualAccountingEntry.cgi
+
