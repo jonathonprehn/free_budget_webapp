@@ -4,24 +4,21 @@
 		<h5>Unresolved correlations list</h5>
 		<table class="table">
 		<tr>
-			<th></th>
-			<th></th>
-			<td></th>
+			<th>Source Bank Account</th>
+			<th>How it was spent description</th>
+			<td>Number of transactions with this unresolved correlation</th>
 		</tr>
 		<?php
-		$cat_query = "SELECT ".
-					"category, ".
-					"description ".
-					"from budget_categories;";
+		$cor_query = "select imp.src_bank_account, imp.description, count(*) as cnt from imported_data as imp left join correlations_table as ct on ct.";
 		$conn = new mysqli("localhost", "free_budget_conn", "badpassword", "free_budget_db");
 		if (mysqli_connect_error()) {
 			die("Failed to connect to db: " . mysqli_connect_error());
 		}
 		try {
-			$sel = $conn->query($cat_query);
+			$sel = $conn->query($cor_query);
 			while($row = $sel->fetch_assoc()) {
 				echo "<tr>";
-
+					
 				echo "</tr>";
 			}
 		} catch(Exception $e) {

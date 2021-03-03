@@ -100,10 +100,24 @@ FOREIGN KEY (rel_book_id)
 --be valid 
 CREATE TABLE correlations_table (
 	correlation_id INT AUTO_INCREMENT PRIMARY KEY,
-	src_description VARCHAR(500) NOT NULL,
-	dst_account_name VARCHAR(150) NOT NULL,
-	dst_rel_account_id INT NOT NULL,
-	rel_line_type_id INT NOT NULL
+	src_bank_account VARCHAR(200) NOT NULL,
+	dst_description VARCHAR(500) NOT NULL,
+	src_line_type_id INT NOT NULL,
+	dst_line_type_id INT NOT NULL,
+	src_account_id INT NOT NULL,
+	dst_account_id INT NOT NULL
+);
+
+	
+
+--correlation table (links uploads to accounting)
+CREATE TABLE accounting_lines (
+	line_id INT AUTO_INCREMENT PRIMARY KEY,
+	rel_accounting_entry_id INT NOT NULL,
+	rel_account_id INT NOT NULL,
+	rel_line_type_id INT NOT NULL,
+	memo VARCHAR(250) NULL,
+	amount DECIMAL(15,2) NOT NULL
 );
 
 ALTER TABLE accounting_lines ADD
@@ -118,18 +132,7 @@ ALTER TABLE accounting_lines ADD
 FOREIGN KEY (rel_line_type_id)
 	    REFERENCES accounting_line_type(line_type_id);
 
-		
-
---correlation table (links uploads to accounting)
-CREATE TABLE accounting_lines (
-	line_id INT AUTO_INCREMENT PRIMARY KEY,
-	rel_accounting_entry_id INT NOT NULL,
-	rel_account_id INT NOT NULL,
-	rel_line_type_id INT NOT NULL,
-	memo VARCHAR(250) NULL,
-	amount DECIMAL(15,2) NOT NULL
-);
-
+	
 
 --budget info (links accounting to budget part)
 CREATE TABLE budgets (
