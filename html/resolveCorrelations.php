@@ -32,6 +32,42 @@ $( document ).ready(function() {
 	$("#unresolvedCorrelationsContainer").load("unresolvedCorrelationsList.php");
 });
 
+function doMap(prfx) {
+	console.log("Doing mapping for " + prfx);
+	var srcBankAccount = document.getElementById(prfx + "SrcBankAccount").innerHTML;
+	var dstDescription = document.getElementById(prfx + "Description").innerHTML;
+	var srcAccountId = document.getElementById(prfx + "SrcBankAccountLink").value;
+	var srcLineTypeId = document.getElementById(prfx + "SrcBankLineType").value;
+	var dstAccountId = document.getElementById(prfx + "DstAccountLink").value;
+	var dstLineTypeId = document.getElementById(prfx + "DstLineType").value;
+	var mapData = "srcBankAccountName=" + encodeURIComponent(srcBankAccount) + "&srcDesc=" + encodeURIComponent(dstDescription) + "&srcMappedAccount=" + encodeURIComponent(srcAccountId) + "&srcMappedLineType=" + encodeURIComponent(srcLineTypeId) + "&dstMappedAccount=" + encodeURIComponent(dstAccountId) + "&dstMappedLineType=" + encodeURIComponent(dstLineTypeId) + "";
+
+	//doesn't make sense to map to the same account and line types
+	//idea for future: allow for incoming transactions to be split
+	if (dstAccountId != srcAccountId && srcLineTypeId != dstLineTypeId) {
+		console.log("Sending POST data to cgi script:");
+		console.log(mapData);
+		//do it 
+		$.ajax({
+		method: "POST",
+		url: "/cgi-bin/createTransactionMapping.cgi",
+		data: mapData,
+		success: function(respData) {
+			console.log("success");	
+			console.log(respData);
+			//reload container with updated data
+			$("#unresolvedCorrelationsContainer").empty();
+			$("#unresolvedCorrelationsContainer").load("unresolvedCorrelationsList.php");
+
+		},
+		error: function(respData) {
+			console.log("error");
+			console.log(respData);
+		}
+		});
+	}
+}
+
 </script>
 </body>
 </html>

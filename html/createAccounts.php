@@ -32,17 +32,8 @@
 			if (mysqli_connect_error()) {
 				die("Failed to connect to db: " . mysqli_connect_error());
 			}
-			try {
-				$sel = $conn->query($account_type_query);
-				echo "<select id=\"" . $ddl_id . "\" name=\"" . $ddl_id . "\">";
-				while ($row = $sel->fetch_assoc()) {
-					echo "<option value=\"" . $row["account_type_id"] . "\">" . $row["account_type_description"] . "</option>";
-				}
-				echo "</select>";
-			} catch(Exception $e) {
-				echo "Error getting categories: " . $e->getMessage();
-			}
-			 
+			make_account_type_dropdown($conn, $ddl_id);
+
 			?>
 			<br />
 			<label for="budgetCategory">Budget Category</label>

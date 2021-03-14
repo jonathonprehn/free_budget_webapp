@@ -174,4 +174,10 @@ void rd_parser::print_state() {
 	return;
 }
 
+void rd_parser::clear_parsing() {
+	if (this->parsing != NULL) {
+		free(this->parsing);
+		this->parsing = NULL;
+	}
+}
 

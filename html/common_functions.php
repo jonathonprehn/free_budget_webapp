@@ -51,4 +51,74 @@ function gen_nav_bar() {
  .'</nav>';
 }
 
+
+function make_account_type_dropdown($sql_conn, $element_id) {
+	$account_type_query = "SELECT "
+			."account_type_id "
+			.",account_type_description "
+			." FROM accounting_account_type;"; 	
+	try {
+		$sel = $sql_conn->query($account_type_query);
+		echo "<select id=\"" . $element_id . "\" name=\"" . $element_id . "\">";
+		while ($row = $sel->fetch_assoc()) {
+			echo "<option value=\"" . $row["account_type_id"] . "\">" . $row["account_type_description"] . "</option>";
+		}
+		echo "</select>";
+	} catch(Exception $e) {
+		echo "Error creating account type dropdown: " . $e->getMessage();
+	}
+}
+
+function make_line_type_dropdown($sql_conn, $element_id) {
+	$line_type_query = "SELECT "
+			." line_type_id "
+			.",line_type_description "
+			." FROM accounting_line_type;"; 	
+	try {
+		$sel = $sql_conn->query($line_type_query);
+		echo "<select id=\"" . $element_id . "\" name=\"" . $element_id . "\">";
+		while ($row = $sel->fetch_assoc()) {
+			echo "<option value=\"" . $row["line_type_id"] . "\">" . $row["line_type_description"] . "</option>";
+		}
+		echo "</select>";
+	} catch(Exception $e) {
+		echo "Error creating account type dropdown: " . $e->getMessage();
+	}
+}
+
+function make_account_dropdown($sql_conn, $element_id, $book_id) {
+	$accounts_query = "SELECT "
+			." account_id "
+			.",account_name "
+			." FROM accounting_accounts WHERE rel_accounting_book_id = ".$book_id.";"; 	
+	try {
+		$sel = $sql_conn->query($accounts_query);
+		echo "<select id=\"" . $element_id . "\" name=\"" . $element_id . "\">";
+		while ($row = $sel->fetch_assoc()) {
+			echo "<option value=\"" . $row["account_id"] . "\">" . $row["account_name"] . "</option>";
+		}
+		echo "</select>";
+	} catch(Exception $e) {
+		echo "Error creating account type dropdown: " . $e->getMessage();
+	}
+}
+
+//this has a different value in the manual accounting entry page!
+function make_account_with_type_dropdown($sql_conn, $element_id, $book_id) {
+
+	$accounts_query = "SELECT a.account_id, a.account_name, b.account_type_description FROM accounting_accounts AS a LEFT JOIN accounting_account_type AS b ON a.rel_account_type_id = b.account_type_id WHERE a.rel_accounting_book_id = ".$book_id.";";
+	try {
+		$sel = $sql_conn->query($accounts_query);
+		echo "<select id=\"" . $element_id . "\" name=\"" . $element_id . "\">";
+		while ($row = $sel->fetch_assoc()) {
+			echo "<option value=\"" . $row["account_id"] . "\">" . $row["account_name"] . " (" . $row["account_type_description"] .  ")</option>";
+		}
+		echo "</select>";
+	} catch(Exception $e) {
+		echo "Error creating account type dropdown: " . $e->getMessage();
+	}
+
+
+}
+
 ?>

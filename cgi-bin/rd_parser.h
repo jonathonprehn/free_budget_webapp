@@ -18,6 +18,7 @@ namespace accounting {
 		char *read_up_to(const char *delim);
 		char *read_up_to_end();
 		bool ended(int offset);
+		void clear_parsing();
 		int get_ptr_val();
 		char get_cur_char();
 		void inc_ptr();

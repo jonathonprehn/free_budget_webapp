@@ -37,6 +37,8 @@ delete_category.o: delete_category.cpp
 	g++ -g -c -std=c++0x -o delete_category.o -I/usr/include/mysql -I/usr/include/mariadb delete_category.cpp -I. -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 create_accounting_account.o: create_accounting_account.cpp
 	g++ -g -c -std=c++0x -o create_accounting_account.o -I/usr/include/mysql -I/usr/include/mariadb create_accounting_account.cpp -I. -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
+create_transaction_mapping.o: create_transaction_mapping.cpp
+	g++ -g -c -std=c++0x -o create_transaction_mapping.o -I/usr/include/mysql -I/usr/include/mariadb create_transaction_mapping.cpp -I. -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 processTrans.cgi: trans_process.o web_com.o accounting_line.o accounting_correlate.o accounting_date.o accounting_account_type.o accounting_book.o accounting_account.o accounting_general_ledger.o accounting_journal.o accounting_entry.o accounting_io.o rd_parser.o web_err.o
 	g++ -g -o processTrans.cgi -I. -I/usr/include/mysql -I/usr/include/mariadb accounting_io.o web_com.o accounting_line.o accounting_correlate.o accounting_date.o accounting_account_type.o accounting_book.o accounting_account.o accounting_general_ledger.o accounting_journal.o accounting_entry.o rd_parser.o trans_process.o web_err.o  -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 	chmod 755 processTrans.cgi 
@@ -54,4 +56,7 @@ testFunction: testFunction.cpp accounting_io.o rd_parser.o web_err.o web_com.o
 manualAccountingEntry.cgi: manual_accounting_entry.o accounting_io.o accounting_entry.o accounting_line.o rd_parser.o web_err.o web_com.o
 	g++ -g -o manualAccountingEntry.cgi -I. -I/usr/include/mysql -I/usr/include/mariadb accounting_io.o accounting_entry.o accounting_line.o web_com.o rd_parser.o accounting_date.o manual_accounting_entry.o web_err.o -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
 	chmod 755 manualAccountingEntry.cgi
+createTransactionMapping.cgi: create_transaction_mapping.o accounting_date.o accounting_io.o rd_parser.o web_err.o web_com.o
+	g++ -g -o createTransactionMapping.cgi -I. -I/usr/include/mysql -I/usr/include/mariadb accounting_io.o web_com.o rd_parser.o accounting_date.o create_transaction_mapping.o web_err.o -L/usr/lib/arm-linux-gnueabihf  -lmariadbclient -lpthread -lz -lm -ldl
+	chmod 755 createTransactionMapping.cgi
 

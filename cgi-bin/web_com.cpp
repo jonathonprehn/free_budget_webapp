@@ -254,7 +254,7 @@ char *decode_form_url_encoding(char *s) {
 		j++;
 	}
 	decoded[j] = '\0';
-
+	parser.clear_parsing();
 	//printf("Decoded: %s\n", decoded);
 
 	return decoded;
