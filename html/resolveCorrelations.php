@@ -50,7 +50,7 @@ function doMap(prfx) {
 		//do it 
 		$.ajax({
 		method: "POST",
-		url: "/cgi-bin/createTransactionMapping.cgi",
+		url: "/cgi-bin/create_transaction_mapping.rb",
 		data: mapData,
 		success: function(respData) {
 			console.log("success");	
