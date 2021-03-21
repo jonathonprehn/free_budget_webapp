@@ -117,8 +117,6 @@ function make_account_with_type_dropdown($sql_conn, $element_id, $book_id) {
 	} catch(Exception $e) {
 		echo "Error creating account type dropdown: " . $e->getMessage();
 	}
-
-
 }
 
 ?>

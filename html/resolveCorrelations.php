@@ -14,7 +14,78 @@
 <div class="container">
 	<div class="row">	
 	<div class="col-12">
-		
+		<h4>Multi-correlation map</h4>
+		<p>If many descriptions have a common word, and they are mapped to the same
+                   account, then enter that common work here to map many at once</p>
+                <form id="multi-map-form" method="post" action="/cgi-bin/create_transaction_mapping_like.rb">
+		<table class="table">
+			<tr>
+			<th>Source Bank Account</th>
+			<th>Description keyword</th>
+			<th>Mapping info</th>
+			</tr>
+			<?php
+			$conn = new mysqli("localhost", "free_budget_conn", "badpassword", "free_budget_db");
+			if (mysqli_connect_error()) {
+				die("Failed to connect to db: " . mysqli_connect_error());
+			}	
+			?>	
+			<tr>
+			<td>
+			<?php
+			
+			$book_id = "1";
+			try {
+				$distinct_bnk = "select distinct src_bank_account from imported_data;";
+				$sel = $conn->query($distinct_bnk);
+				echo "<select id=\"multiSrcBank\" name=\"srcBankAccount\">";
+				while($row = $sel->fetch_assoc()) {
+					//substr to shorten to fit on page better
+					echo "<option value=\"" . $row["src_bank_account"] . "\">" . substr($row["src_bank_account"],0,15) . "...</option>";	
+				}
+				echo "</select>";
+			} catch (Exception $e) {
+				echo "Error getting list of unresolved correlations: " . $e->getMessage();
+			}
+			?>
+			</td>
+			<td>
+			<input type="text" name="likeDesc" >	
+			</td>
+			<td>
+<?php
+
+try {
+
+echo "<div id=\"multimapContainer\">";
+echo "<div>";
+echo "Source Bank account linked to: ";
+make_account_with_type_dropdown($conn, "multimapSrcBankAccountLink", $book_id);
+echo "</div>";	
+echo "<div>";
+echo "With line type: ";
+make_line_type_dropdown($conn, "multimapSrcBankLineType");
+echo "</div>";
+echo "<div>";
+echo "Description linked to: ";
+make_account_with_type_dropdown($conn, "multimapDstAccountLink", $book_id);
+echo "</div>";
+echo "<div>";
+echo "With line type: ";
+make_line_type_dropdown($conn, "multimapDstLineType");
+echo "</div>";
+echo "<button type=\"button\" class=\"btn btn-info\" onclick=\"doMultimapMap();\">Multi-Map</button>";
+echo "</div>";
+} catch(Exception $e) {
+	echo "Error getting list of unresolved correlations: " . $e->getMessage();
+
+}
+
+?>
+			</td>
+			</tr>
+		</table>	
+		</form>	
 	</div>
 	</div>
 </div>
@@ -55,6 +126,21 @@ function doMap(prfx) {
 		success: function(respData) {
 			console.log("success");	
 			console.log(respData);
+  			
+			//apply transaction mapping
+			$.ajax({
+			method: "POST",
+			url: "/cgi-bin/apply_transaction_mapping.rb",
+			data: "",
+			success: function(rd) {
+				console.log("Successfully applied transaction mapped");
+			},
+			error: function(rd) { 
+				console.log("Error from apply transaction mapping:");
+				console.log(rd);       
+			}
+			});
+
 			//reload container with updated data
 			$("#unresolvedCorrelationsContainer").empty();
 			$("#unresolvedCorrelationsContainer").load("unresolvedCorrelationsList.php");
@@ -66,6 +152,29 @@ function doMap(prfx) {
 		}
 		});
 	}
+}
+
+
+
+function doMultimapMap() {
+	var multimapForm = $("#multi-map-form");
+	var formData = multimapForm.serialize();
+	var act = multimapForm.attr('action');
+
+	console.log(formData);
+	$.ajax({
+	method: "POST",
+	url: "/cgi-bin/create_transaction_mapping_like.rb",
+	data: formData,
+	success: function(rd) {
+		console.log("Successfully applied transaction multi mapped");
+		console.log(rd);
+	},
+	error: function(rd) { 
+		console.log("Error from apply transaction multi mapping:");
+		console.log(rd);       
+	}
+	});
 }
 
 </script>

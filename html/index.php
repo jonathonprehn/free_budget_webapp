@@ -18,18 +18,7 @@
 	<div class="row">
 	This will be the home page
 	</div>
-	<div class="row">
-	<div class="col-12">
-		<table class="table">
-		<tr>
-		<th>Overview</th><th></th>
-		</tr>
-		<tr>
-		<td>numbers</td><td>numbers</td>
-		</tr>
-		</table>
-	</div>
-	</div>
+	
 </div>
 
 

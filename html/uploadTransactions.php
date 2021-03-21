@@ -13,8 +13,32 @@
 ?>
 <div class="container">
 	<div class="row">
-	File upload test
+	Import transactions downloaded from bank data
+	<br />
+	<br />
+	Use the template until dynamic field mapping works. Dates must be in a text format with the form MM/DD/YYYY.
 	</div>
+	<div class="row">
+	<?php
+	try {
+		$sql_conn = new mysqli("localhost", "free_budget_conn", "badpassword", "free_budget_db");
+		if (mysqli_connect_error()) {
+			die("Failed to connect to db: " . mysqli_connect_error());
+		}
+		$q = "select (select max(upload_date) from uploaded_files limit 1) as most_recent_upload, (select max(transaction_date) from imported_data limit 1) as most_recent_transaction;";
+		$sel = $sql_conn->query($q);
+		while ($row = $sel->fetch_assoc()) {
+			echo "The most recent upload was on ".$row["most_recent_upload"]."<br />";
+			echo "The most recent transaction in this upload was on ".$row["most_recent_transaction"]."<br />";
+		}
+
+	} catch(Exception $except) {
+		//couldn't get info
+	}	
+	?>
+	</div>
+	<br />
+	<div class="row">
 	<form id="importFileForm" action="/cgi-bin/processTrans.cgi" method="post" enctype="multipart/form-data">
 		<input  type="file" name="uploading">
 		<input class="btn btn-info" type="submit" value="Submit">
